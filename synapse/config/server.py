@@ -35,6 +35,8 @@ class ServerConfig(Config):
         # "disable" federation
         self.send_federation = config.get("send_federation", True)
 
+        self.room_federate_default = config.get("room_federate_default", True)
+
         if self.public_baseurl is not None:
             if self.public_baseurl[-1] != '/':
                 self.public_baseurl += '/'
@@ -154,6 +156,10 @@ class ServerConfig(Config):
 
         # The GC threshold parameters to pass to `gc.set_threshold`, if defined
         # gc_thresholds: [700, 10, 10]
+
+        # The default behavior of created room if m.federate is not
+        # specified during the room creation
+        # room_federate_default = True
 
         # List of ports that Synapse should listen on, their purpose and their
         # configuration.

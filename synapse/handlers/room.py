@@ -153,6 +153,8 @@ class RoomCreationHandler(BaseHandler):
             initial_state[(val["type"], val.get("state_key", ""))] = val["content"]
 
         creation_content = config.get("creation_content", {})
+        if not 'm.federate' in creation_content:
+            creation_content["m.federate"] = self.hs.config.room_federate_default
 
         msg_handler = self.hs.get_handlers().message_handler
         room_member_handler = self.hs.get_handlers().room_member_handler
