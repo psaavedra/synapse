@@ -163,6 +163,8 @@ class ServerConfig(Config):
                 "federation_ip_range_blacklist: %s" % e
             )
 
+        self.room_federate_default = config.get("room_federate_default", True)
+
         if self.public_baseurl is not None:
             if self.public_baseurl[-1] != '/':
                 self.public_baseurl += '/'
@@ -433,6 +435,9 @@ class ServerConfig(Config):
           - '::1/128'
           - 'fe80::/64'
           - 'fc00::/7'
+        # The default behavior of created room if m.federate is not
+        # specified during the room creation
+        # room_federate_default = True
 
         # List of ports that Synapse should listen on, their purpose and their
         # configuration.
