@@ -113,6 +113,8 @@ class ServerConfig(Config):
             for domain in federation_domain_whitelist:
                 self.federation_domain_whitelist[domain] = True
 
+        self.room_federate_default = config.get("room_federate_default", True)
+
         if self.public_baseurl is not None:
             if self.public_baseurl[-1] != '/':
                 self.public_baseurl += '/'
@@ -288,6 +290,10 @@ class ServerConfig(Config):
         #  - lon.example.com
         #  - nyc.example.com
         #  - syd.example.com
+
+        # The default behavior of created room if m.federate is not
+        # specified during the room creation
+        # room_federate_default = True
 
         # List of ports that Synapse should listen on, their purpose and their
         # configuration.
