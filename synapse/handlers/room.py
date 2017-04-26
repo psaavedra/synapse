@@ -640,6 +640,8 @@ class RoomCreationHandler(BaseHandler):
             initial_state[(val["type"], val.get("state_key", ""))] = val["content"]
 
         creation_content = config.get("creation_content", {})
+        if not 'm.federate' in creation_content:
+            creation_content["m.federate"] = self.hs.config.room_federate_default
 
         # override any attempt to set room versions via the creation_content
         creation_content["room_version"] = room_version
