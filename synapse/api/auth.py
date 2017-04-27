@@ -102,7 +102,8 @@ class Auth(object):
         """
         with Measure(self.clock, "auth.check"):
             event_auth.check(
-                room_version, event, auth_events, do_sig_check=do_sig_check
+                    room_version, event, auth_events, do_sig_check=do_sig_check,
+                    room_federate_default=room_federate_default
             )
 
     @defer.inlineCallbacks
