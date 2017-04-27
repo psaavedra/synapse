@@ -28,7 +28,8 @@ from synapse.types import UserID, get_domain_from_id
 logger = logging.getLogger(__name__)
 
 
-def check(room_version, event, auth_events, do_sig_check=True, do_size_check=True):
+def check(room_version, event, auth_events, do_sig_check=True, do_size_check=True,
+        room_federate_default=True):
     """ Checks if this event is correctly authed.
 
     Args:
@@ -111,7 +112,8 @@ def check(room_version, event, auth_events, do_sig_check=True, do_size_check=Tru
     creating_domain = get_domain_from_id(event.room_id)
     originating_domain = get_domain_from_id(event.sender)
     if creating_domain != originating_domain:
-        if not _can_federate(event, auth_events):
+        if not _can_federate(event, auth_events,
+                             room_federate_default=room_federate_default):
             raise AuthError(
                 403,
                 "This room has been marked as unfederatable."
@@ -145,7 +147,8 @@ def check(room_version, event, auth_events, do_sig_check=True, do_size_check=Tru
         )
 
     if event.type == EventTypes.Member:
-        _is_membership_change_allowed(event, auth_events)
+        _is_membership_change_allowed(event, auth_events,
+            room_federate_default=room_federate_default)
         logger.debug("Allowing! %s", event)
         return
 
@@ -195,13 +198,16 @@ def _check_size_limits(event):
         too_big("event")
 
 
-def _can_federate(event, auth_events):
+def _can_federate(event, auth_events, room_federate_default=True):
     creation_event = auth_events.get((EventTypes.Create, ""))
+    logger.debug("Creation_event content federate: %s",
+                 creation_event.content.get("m.federate",
+                                            room_federate_default))
+    return creation_event.content.get("m.federate", room_federate_default) is True
 
-    return creation_event.content.get("m.federate", True) is True
 
-
-def _is_membership_change_allowed(event, auth_events):
+def _is_membership_change_allowed(event, auth_events,
+                                  room_federate_default=True):
     membership = event.content["membership"]
 
     # Check if this is the room creator joining:
@@ -218,7 +224,7 @@ def _is_membership_change_allowed(event, auth_events):
     creating_domain = get_domain_from_id(event.room_id)
     target_domain = get_domain_from_id(target_user_id)
     if creating_domain != target_domain:
-        if not _can_federate(event, auth_events):
+        if not _can_federate(event, auth_events, room_federate_default):
             raise AuthError(
                 403,
                 "This room has been marked as unfederatable."
