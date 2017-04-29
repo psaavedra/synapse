@@ -95,10 +95,13 @@ class RoomCreationHandler(BaseHandler):
         else:
             room_alias = None
 
+        externals_invited = False
         invite_list = config.get("invite", [])
         for i in invite_list:
             try:
                 UserID.from_string(i)
+                if not self.hs.is_mine_id(i):
+                    externals_invited = True
             except:
                 raise SynapseError(400, "Invalid user_id: %s" % (i,))
 
@@ -154,7 +157,10 @@ class RoomCreationHandler(BaseHandler):
 
         creation_content = config.get("creation_content", {})
         if not 'm.federate' in creation_content:
-            creation_content["m.federate"] = self.hs.config.room_federate_default
+            if externals_invited:
+                creation_content["m.federate"] = True
+            else:
+                creation_content["m.federate"] = self.hs.config.room_federate_default
 
         msg_handler = self.hs.get_handlers().message_handler
         room_member_handler = self.hs.get_handlers().room_member_handler
