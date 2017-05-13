@@ -157,7 +157,7 @@ class RoomCreationHandler(BaseHandler):
             initial_state[(val["type"], val.get("state_key", ""))] = val["content"]
 
         creation_content = config.get("creation_content", {})
-        if not 'm.federate' in creation_content:
+        if 'm.federate' not in creation_content:
             if externals_invited:
                 creation_content["m.federate"] = True
             else:
