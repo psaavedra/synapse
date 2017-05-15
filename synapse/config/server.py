@@ -164,7 +164,7 @@ class ServerConfig(Config):
 
         # The GC threshold parameters to pass to `gc.set_threshold`, if defined
         # gc_thresholds: [700, 10, 10]
-        
+
         # The default behavior of created room if m.federate is not
         # specified during the room creation
         # room_federate_default = True
