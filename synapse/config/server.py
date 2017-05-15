@@ -37,6 +37,8 @@ class ServerConfig(Config):
 
         self.room_federate_default = config.get("room_federate_default", True)
 
+        self.filter_timeline_limit = config.get("filter_timeline_limit", -1)
+
         if self.public_baseurl is not None:
             if self.public_baseurl[-1] != '/':
                 self.public_baseurl += '/'
@@ -162,10 +164,14 @@ class ServerConfig(Config):
 
         # The GC threshold parameters to pass to `gc.set_threshold`, if defined
         # gc_thresholds: [700, 10, 10]
-
+        
         # The default behavior of created room if m.federate is not
         # specified during the room creation
         # room_federate_default = True
+
+        # Set the limit on the returned events in the timeline in the get
+        # and sync operations. The default value is -1, means no upper limit.
+        # filter_timeline_limit: 5000
 
         # List of ports that Synapse should listen on, their purpose and their
         # configuration.
