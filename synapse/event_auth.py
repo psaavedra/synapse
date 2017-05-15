@@ -95,8 +95,10 @@ def check(event, auth_events, do_sig_check=True, do_size_check=True,
     creating_domain = get_domain_from_id(event.room_id)
     originating_domain = get_domain_from_id(event.sender)
     if creating_domain != originating_domain:
-        if not _can_federate(event, auth_events,
-                             room_federate_default=room_federate_default):
+        if not _can_federate(
+            event, auth_events,
+            room_federate_default=room_federate_default
+        ):
             raise AuthError(
                 403,
                 "This room has been marked as unfederatable."
