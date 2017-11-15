@@ -16,4 +16,4 @@
 """ This is a reference implementation of a Matrix home server.
 """
 
-__version__ = "0.25.0"
+__version__ = "v0.25.0+psaavedra.0"
