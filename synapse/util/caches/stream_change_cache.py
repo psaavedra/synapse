@@ -15,8 +15,12 @@
 
 from synapse.util import caches
 
+import sys
+if sys.version_info[0] == 3:
+    from sortedcontainers import SortedDict
+else:
+    from collections import OrderedDict as SortedDict
 
-from sortedcontainers import SortedDict
 import logging
 
 

@@ -35,7 +35,12 @@ from synapse.storage.presence import UserPresenceState
 from synapse.util.metrics import Measure
 from synapse.metrics import LaterGauge
 
-from sortedcontainers import SortedDict
+import sys
+if sys.version_info[0] == 3:
+    from sortedcontainers import SortedDict
+else:
+    from collections import OrderedDict as SortedDict
+
 from collections import namedtuple
 
 import logging
