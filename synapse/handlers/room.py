@@ -892,6 +892,9 @@ class RoomCreationHandler(BaseHandler):
             content=creator_join_profile,
         )
 
+        # Strip RoomEncryption events
+        pl_content = initial_state.pop((EventTypes.RoomEncryption, ""), None)
+
         # We treat the power levels override specially as this needs to be one
         # of the first events that get sent into a room.
         pl_content = initial_state.pop((EventTypes.PowerLevels, ""), None)
